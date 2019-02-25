@@ -1,4 +1,4 @@
-package main
+package rpc
 
 import (
 	"fmt"
@@ -66,7 +66,7 @@ func mailRPC() (err error) {
 	return
 }
 
-func main() {
+func client() {
 
 	for i := 0; i < 100; i++ {
 		err := mailRPC()

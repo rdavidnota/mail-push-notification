@@ -15,8 +15,16 @@ type RabbitMQ struct {
 	MailResponse string
 }
 
+type MongoDB struct {
+	User string
+	Pass string
+	Host string
+	Port string
+}
+
 type Configuration struct {
 	Rabbitmq RabbitMQ
+	Mongodb  MongoDB
 }
 
 func validationEnvVar(env_var string) bool {
@@ -66,6 +74,30 @@ func validateEnvVars() error {
 		sw = true
 	}
 
+	if !validationEnvVar("MONGO_HOST") {
+		err := errors.New("Variable de entorno no configurada")
+		utils.FailOnErrorNormal(err, "Variable de entorno no configurada MONGO_HOST")
+		sw = true
+	}
+
+	if !validationEnvVar("MONGO_PORT") {
+		err := errors.New("Variable de entorno no configurada")
+		utils.FailOnErrorNormal(err, "Variable de entorno no configurada MONGO_PORT")
+		sw = true
+	}
+
+	if !validationEnvVar("MONGO_USER") {
+		err := errors.New("Variable de entorno no configurada")
+		utils.FailOnErrorNormal(err, "Variable de entorno no configurada MONGO_USER")
+		sw = true
+	}
+
+	if !validationEnvVar("MONGO_PASS") {
+		err := errors.New("Variable de entorno no configurada")
+		utils.FailOnErrorNormal(err, "Variable de entorno no configurada MONGO_PASS")
+		sw = true
+	}
+
 	if sw {
 		err := errors.New("Variable de entorno no configurada")
 		return err
@@ -86,6 +118,11 @@ func GetConfiguration() Configuration {
 	config.Rabbitmq.Pass = os.Getenv("RABBITMQ_PASS")
 	config.Rabbitmq.MailRequest = os.Getenv("RABBITMQ_MAIL_REQUEST")
 	config.Rabbitmq.MailResponse = os.Getenv("RABBITMQ_MAIL_RESPONSE")
+
+	config.Mongodb.User = os.Getenv("MONGO_PASS")
+	config.Mongodb.Pass = os.Getenv("MONGO_USER")
+	config.Mongodb.Host = os.Getenv("MONGO_HOST")
+	config.Mongodb.Port = os.Getenv("MONGO_PORT")
 
 	return config
 }

@@ -1,4 +1,4 @@
-package main
+package rpc
 
 import (
 	"encoding/json"
@@ -10,7 +10,7 @@ import (
 	"log"
 )
 
-func main() {
+func server() {
 	conn, err := amqp.Dial(config.GetUrl())
 	utils.FailOnErrorFatal(err, "Conexión fallida con el servidor RabbitMQ")
 	defer conn.Close()

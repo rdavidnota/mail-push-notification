@@ -1,25 +1,49 @@
 version: "3"
 
+volumes:
+  hdd-app:
+  hdd-rabbitmq:
+  hdd-mongo:
+
 services:
   app:
     build: .
-    image: mail-push
+    image: mailpush
     environment:
       RABBITMQ_HOST: "rabbitmq"
       RABBITMQ_PORT: "5672"
-      RABBITMQ_USER: "rnota"
-      RABBITMQ_PASS: "123456"
+      RABBITMQ_USER: "rabbitmq"
+      RABBITMQ_PASS: "pass$rabbitmq"
       RABBITMQ_MAIL_REQUEST: "mail_request"
       RABBITMQ_MAIL_RESPONSE: "mail_response"
+      MONGO_HOST: "mongodb"
+      MONGO_PORT: "27017"
+      MONGO_USER: "root"
+      MONGO_PASS: "example"
     depends_on:
-      - db
+      - mongodb
+      - rabbitmq
     ports:
       - "9000:9000"
     volumes:
-      - .:/go/src/app
+      - hdd-app:/go/src/app
 
-  db:
+  mongodb:
     image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: "root"
+      MONGO_INITDB_ROOT_PASSWORD: "example"
+    volumes:
+      - hdd-mongo:/data/db
 
   rabbitmq:
     image: rabbitmq:3-management
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: "rabbitmq"
+      RABBITMQ_DEFAULT_PASS: "pass$rabbitmq"
+    ports:
+      - "15672:15672"
+    volumes:
+      - hdd-rabbitmq:/var/lib/rabbitmq
