@@ -1,0 +1,25 @@
+version: "3"
+
+services:
+  app:
+    build: .
+    image: mail-push
+    environment:
+      RABBITMQ_HOST: "rabbitmq"
+      RABBITMQ_PORT: "5672"
+      RABBITMQ_USER: "rnota"
+      RABBITMQ_PASS: "123456"
+      RABBITMQ_MAIL_REQUEST: "mail_request"
+      RABBITMQ_MAIL_RESPONSE: "mail_response"
+    depends_on:
+      - db
+    ports:
+      - "9000:9000"
+    volumes:
+      - .:/go/src/app
+
+  db:
+    image: mongo
+
+  rabbitmq:
+    image: rabbitmq:3-management
