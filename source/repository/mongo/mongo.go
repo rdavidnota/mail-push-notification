@@ -11,18 +11,24 @@ import (
 
 func TestConnection(mail entities.Mail) {
 
-	client, err := mongo.Connect(context.TODO(), config.GetUrl())
-
-	if err != nil {
-		utils.FailOnErrorFatal(err, "Error al conectar con el servidor de mongo")
-	}
+	client, errConnect := mongo.Connect(context.TODO(), config.GetUrl())
+	utils.FailOnErrorFatal(errConnect, "Error al conectar con el servidor de mongo")
 
 	// Check the connection
-	err = client.Ping(context.TODO(), nil)
-
-	if err != nil {
-		utils.FailOnErrorFatal(err, "No se tiene conexion con el servidor de mongo")
-	}
+	errPing := client.Ping(context.TODO(), nil)
+	utils.FailOnErrorFatal(errPing, "No se tiene conexion con el servidor de mongo")
 
 	fmt.Println("Connected to MongoDB!")
+
+	collection := client.Database("test").Collection("trainers")
+
+	insertResult, errInsert := collection.InsertOne(context.TODO(), mail)
+
+	utils.FailOnErrorNormal(errInsert, "Error al insertar el correo")
+	fmt.Println("Inserted a single document: ", insertResult.InsertedID)
+
+	errDisconnect := client.Disconnect(context.TODO())
+	utils.FailOnErrorFatal(errDisconnect, "Error al desconectar con el servidor de mongo")
+
+	fmt.Println("Connection to MongoDB closed.")
 }

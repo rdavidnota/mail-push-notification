@@ -1,7 +1,6 @@
 version: "3"
 
 volumes:
-  hdd-app:
   hdd-rabbitmq:
   hdd-mongo:
 
@@ -26,7 +25,7 @@ services:
     ports:
       - "9000:9000"
     volumes:
-      - hdd-app:/go/src/app
+      - .:/go/src/app
 
   mongodb:
     image: mongo

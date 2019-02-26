@@ -1,18 +1,21 @@
 package utils
 
 import (
+	"fmt"
 	"log"
 	"math/rand"
 )
 
 func FailOnErrorFatal(err error, msg string) {
 	if err != nil {
+		FailOnErrorNormal(err, msg)
 		log.Fatalf("%s: %s", msg, err)
 	}
 }
 
 func FailOnErrorNormal(err error, msg string) {
 	if err != nil {
+		fmt.Printf("%s: %s", msg, err)
 		log.Printf("%s: %s", msg, err)
 	}
 }
